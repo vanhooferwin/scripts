@@ -20,6 +20,8 @@ cat <<EOF > server.py
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 import time
 
+PORT = $PORT  # Correctly embedding shell variable
+
 class TimeHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
@@ -28,8 +30,9 @@ class TimeHandler(SimpleHTTPRequestHandler):
         current_time = time.strftime("%Y-%m-%d %H:%M:%S")
         self.wfile.write(f"<h1>Hello, World!</h1><p>Current Time: {current_time}</p>".encode())
 
-server = HTTPServer(("0.0.0.0", $PORT), TimeHandler)
+server = HTTPServer(("0.0.0.0", PORT), TimeHandler)
 print(f"Serving on port {PORT}. Press Ctrl+C to stop.")
+
 try:
     server.serve_forever()
 except KeyboardInterrupt:
